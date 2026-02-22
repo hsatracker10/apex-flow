@@ -227,7 +227,10 @@ struct ApexFlowApp: App {
                         if enableAnnouncements {
                             AnnouncementsService.shared.start()
                         }
-                        
+
+                        // Remind monthly to pull upstream VoiceInk improvements into Apex Flow
+                        UpstreamSyncService.shared.checkAndRemind()
+
                         // Start the transcription auto-cleanup service (handles immediate and scheduled transcript deletion)
                         transcriptionAutoCleanupService.startMonitoring(modelContext: container.mainContext)
                         
