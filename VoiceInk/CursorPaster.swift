@@ -8,6 +8,10 @@ private let logger = Logger(subsystem: "com.VoiceInk", category: "CursorPaster")
 class CursorPaster {
 
     static func pasteAtCursor(_ text: String) {
+        if insertViaAccessibility(text) {
+            return
+        }
+
         let pasteboard = NSPasteboard.general
         let shouldRestoreClipboard = UserDefaults.standard.bool(forKey: "restoreClipboardAfterPaste")
 
@@ -44,6 +48,29 @@ class CursorPaster {
                 }
             }
         }
+    }
+
+    // MARK: - Accessibility-based text insertion
+
+    /// Inserts text directly into the focused element via the Accessibility API.
+    /// Returns true if insertion succeeded — no clipboard is touched.
+    private static func insertViaAccessibility(_ text: String) -> Bool {
+        guard AXIsProcessTrusted() else { return false }
+
+        let systemWide = AXUIElementCreateSystemWide()
+        var focusedRef: CFTypeRef?
+
+        guard AXUIElementCopyAttributeValue(systemWide, kAXFocusedUIElementAttribute as CFString, &focusedRef) == .success,
+              let focused = focusedRef else {
+            return false
+        }
+
+        let element = focused as! AXUIElement
+        let result = AXUIElementSetAttributeValue(element, kAXSelectedTextAttribute as CFString, text as CFTypeRef)
+        if result == .success {
+            logger.notice("Inserted text via Accessibility API")
+        }
+        return result == .success
     }
 
     // MARK: - Clipboard paste with input-source fix

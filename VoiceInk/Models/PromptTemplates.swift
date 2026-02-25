@@ -49,6 +49,23 @@ enum PromptTemplates {
             ),
             TemplatePrompt(
                 id: UUID(),
+                title: "Light Touch",
+                promptText: """
+                    - Correct only clear speech recognition errors. Do NOT restructure, rewrite, or reformat anything.
+                    - Preserve the original sentence structure, word order, and phrasing exactly as spoken.
+                    - Fix proper nouns, brand names, and technical terms that were misheard: e.g. "get hub" → "GitHub", "pie thon" → "Python", "a p i" → "API", "mac OS" → "macOS", "i O S" → "iOS", "java script" → "JavaScript", "type script" → "TypeScript", "vs code" → "VS Code", "open AI" → "OpenAI", "chat G P T" → "ChatGPT", "sequel" → "SQL" when used in a technical context.
+                    - Fix homophones only when the wrong word is clearly out of place: e.g. "their" vs "there", "your" vs "you're", "its" vs "it's".
+                    - Fix obvious spelling errors caused by mishearing.
+                    - Keep all fillers, stutters, and informal language exactly as spoken.
+                    - Do not add punctuation, capitalization changes, or formatting beyond what is necessary to correct a recognition error.
+                    - Output only the corrected text with no explanations or commentary.
+                    - Don't add any information not available in the <TRANSCRIPT> text ever.
+                    """,
+                icon: "wand.and.stars.inverse",
+                description: "Fixes recognition errors only — sentence structure untouched"
+            ),
+            TemplatePrompt(
+                id: UUID(),
                 title: "Chat",
                 promptText: """
                     - Rewrite the <TRANSCRIPT> text as a chat message: informal, concise, and conversational.
